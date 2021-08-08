@@ -1,6 +1,6 @@
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
 
 // Init the app
 const app = express();
@@ -11,31 +11,31 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("Connected To MongoDB");
+    console.log('Connected To MongoDB');
   })
   .catch((err) => {
     console.log(err);
   });
 
 // Routes
-const smsNotification = require("./routes/smsNotification");
+const smsNotification = require('./routes/smsNotification');
 
 // Middleware
 app.use(express.json());
 
 // To check the server is working
-app.get("/", (req, res) => res.send("Swvl Notification API!! --"));
+app.get('/', (req, res) => res.send('Swvl Notification API!! --'));
 
 // Handle sending sms
-app.use("/api/v1/sms", smsNotification);
+app.use('/api/v1/sms', smsNotification);
 
 // Send Notification SMS to one user
-app.post("/api/v1/notification/single/:userId", (req, res) => {
+app.post('/api/v1/notification/single/:userId', (req, res) => {
   const { userId } = req.params;
   const { phoneNumber, message } = req.body;
 });
 
-app.post("/api/v1/push-notification/:deviceToken", (req, res) => {
+app.post('/api/v1/push-notification/:deviceToken', (req, res) => {
   const { userId } = req.params; // This will identify a spiecifc user
   const { message } = req.body;
 
