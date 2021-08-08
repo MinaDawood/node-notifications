@@ -1,10 +1,62 @@
 require("dotenv").config();
 const express = require("express");
+const mongoose = require("mongoose");
 
+// Init the app
 const app = express();
 
-// For Testing
+mongoose
+  .connect(process.env.MONGO_DB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected To MongoDB");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+// Routes
+const smsNotification = require("./routes/smsNotification");
+
+// Middleware
+app.use(express.json());
+
+// To check the server is working
 app.get("/", (req, res) => res.send("Swvl Notification API!! --"));
+
+// Handle sending sms
+app.use("/api/v1/sms", smsNotification);
+
+// Send Notification SMS to one user
+app.post("/api/v1/notification/single/:userId", (req, res) => {
+  const { userId } = req.params;
+  const { phoneNumber, message } = req.body;
+});
+
+app.post("/api/v1/push-notification/:deviceToken", (req, res) => {
+  const { userId } = req.params; // This will identify a spiecifc user
+  const { message } = req.body;
+
+  // {
+  // "icon": "link to icon",
+  // "title":"some title",
+  // "body": "some body"
+  // }
+
+  try {
+    // Save the notification into the DB
+
+    // After saving it will send it as a json format to the frontend
+    res.status(200).json({
+      status: true,
+      notification: {
+        message,
+      },
+    });
+  } catch (err) {}
+});
 
 const PORT = process.env.PORT || 5000;
 
