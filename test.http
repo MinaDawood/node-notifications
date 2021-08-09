@@ -1,7 +1,7 @@
-POST http://localhost:5000/api/v1/sms/single HTTP/1.1
+POST http://localhost:5000/api/v1/push-notification/single HTTP/1.1
 content-type: application/json
 
 {
     "message": "test",
-    "phoneNumber": "201204582130"
+    "phoneNumbers": ["2012045821302"]
 }

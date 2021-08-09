@@ -1,8 +1,5 @@
-const express = require('express');
 const Vonage = require('@vonage/server-sdk');
-const Sms = require('../models/smsModel');
-
-const router = express.Router();
+const SmsModel = require('../models/smsModel');
 
 // Initlaize SMS service provider
 const vonage = new Vonage({
@@ -11,9 +8,11 @@ const vonage = new Vonage({
 });
 
 // Send SMS to single user
-router.post('/single', async (req, res) => {
+exports.sendSmsToOneUser = async (req, res) => {
+  let dataSaved = {};
   const { message, phoneNumber } = req.body;
 
+  // Handle errors when empty data passes
   if (!message || !phoneNumber || message.length === 0 || phoneNumber.length === 0) {
     res.status(400).json({
       status: 'failed',
@@ -28,8 +27,7 @@ router.post('/single', async (req, res) => {
   const text = message;
 
   // Initalize sms model to save into the DB
-  const theSms = new Sms({
-    id: 1,
+  const theSms = new SmsModel({
     message: text,
     phoneNumber: to,
     sendAt: new Date(),
@@ -38,18 +36,28 @@ router.post('/single', async (req, res) => {
   // Send The SMS
   vonage.message.sendSms(from, to, text, async (err, responseData) => {
     if (err) {
-      console.log(err);
+      res.status(500).json({
+        status: 'failed',
+        message: err,
+      });
     } else if (responseData.messages[0].status === '0') {
       // Save the SMS notification into MongoDB
       await theSms
         .save()
-        .then((doc) => {})
-        .catch((err) => {
-          console.log(err);
+        .then((doc) => {
+          dataSaved = doc;
+        })
+        .catch((databaseErr) => {
+          res.status(500).json({
+            status: 'failed',
+            message: 'something went wrong with database',
+            error: databaseErr,
+          });
         });
       res.status(200).json({
         status: 'success',
         message: `Message sent successfully to ${to}. and saved into the database`,
+        data: dataSaved,
       });
     } else {
       const msgError = `Message failed with error: ${responseData.messages[0]['error-text']}`;
@@ -59,24 +67,18 @@ router.post('/single', async (req, res) => {
       });
     }
   });
-});
+};
 
 // Send SMS to group of users
-router.post('/group', (req, res) => {
+exports.sendSmsToGroup = async (req, res) => {
+  let dataSaved = {};
   const { message, phoneNumbers } = req.body;
 
   // Handle errors when empty data passes
-  if (!message && !phoneNumbers) {
+  if (!message || !phoneNumbers || message.length === 0 || phoneNumbers.length === 0) {
     res.status(400).json({
-      status: false,
-      message: 'must provide the message and the phone numbers',
-    });
-    return;
-  }
-  if (message.length === 0 || phoneNumbers.length === 0) {
-    res.status(400).json({
-      status: false,
-      message: 'must provide the message and the phone numbers',
+      status: 'failed',
+      message: 'Must provide the message and the phone numbers',
     });
     return;
   }
@@ -86,24 +88,49 @@ router.post('/group', (req, res) => {
   const text = message;
 
   // Map throw phone numbers and send the SMS to every number
-  phoneNumbers.map((num) => {
+  phoneNumbers.forEach((num) => {
     const to = Number(num);
 
+    // Initalize sms model to save into the DB
+    const theSms = new SmsModel({
+      message: text,
+      phoneNumber: to,
+      sendAt: new Date(),
+    });
+
     // Send The SMS
-    vonage.message.sendSms(from, to, text, (err, responseData) => {
+    vonage.message.sendSms(from, to, text, async (err, responseData) => {
       if (err) {
-        console.log(err);
+        res.status(500).json({
+          status: 'failed',
+          message: err,
+        });
       } else if (responseData.messages[0].status === '0') {
-        console.log('Message sent successfully.');
+        // Save the SMS notification into MongoDB
+        await theSms
+          .save()
+          .then((doc) => {
+            dataSaved = doc;
+          })
+          .catch((databaseErr) => {
+            res.status(500).json({
+              status: 'failed',
+              message: 'something went wrong with database',
+              error: databaseErr,
+            });
+          });
+        res.status(200).json({
+          status: 'success',
+          message: `Message sent successfully to ${to}. and saved into the database`,
+          data: dataSaved,
+        });
       } else {
         const msgError = `Message failed with error: ${responseData.messages[0]['error-text']}`;
         res.status(400).json({
-          status: false,
+          status: 'failed',
           message: msgError,
         });
       }
     });
   });
-});
-
-module.exports = router;
+};

@@ -2,6 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 
+// Routes
+const smsRoutes = require('./routes/smsRoutes');
+const pushNotificationRoutes = require('./routes/pushNotificationRoutes');
+
 // Init the app
 const app = express();
 
@@ -17,9 +21,6 @@ mongoose
     console.log(err);
   });
 
-// Routes
-const smsNotification = require('./routes/smsNotification');
-
 // Middleware
 app.use(express.json());
 
@@ -27,7 +28,10 @@ app.use(express.json());
 app.get('/', (req, res) => res.send('Swvl Notification API!! --'));
 
 // Handle sending sms
-app.use('/api/v1/sms', smsNotification);
+app.use('/api/v1/sms', smsRoutes);
+
+// Handle sending push notification
+app.use('/api/v1/push-notification', pushNotificationRoutes);
 
 // Send Notification SMS to one user
 app.post('/api/v1/notification/single/:userId', (req, res) => {
