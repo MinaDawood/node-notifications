@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const pushNotificationSchema = new Schema({
-  message: {
+  title: {
+    type: String,
+    required: true,
+  },
+  body: {
     type: String,
     required: true,
   },

@@ -4,9 +4,9 @@ const PushNotificationController = require('../controllers/PushNotificationContr
 const router = express.Router();
 
 // Send Push Notification to one user Route
-router.route('/single').post(PushNotificationController.sendPushNotificationToOneUser);
+router.route('/single/').post();
 
-// Send Push Notification to one user Route
-router.route('/group').post(PushNotificationController.sendPushNotificationToGroup);
+// Send Push Notification to group of users
+router.route('/group').post();
 
 module.exports = router;

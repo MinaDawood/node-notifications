@@ -3,7 +3,7 @@ const smsController = require('../controllers/smsController');
 
 const router = express.Router();
 
-// Send to one user route
+// Send to one user route IOS
 router.route('/single').post(smsController.sendSmsToOneUser);
 
 // Send to group of users route
