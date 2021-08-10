@@ -1,16 +1,14 @@
-# i didnt know what type of devide should i target (Iphone or andriod) so i made two end points for both
-
-# Swvl Notification API
+# Swvl Notifications API.
 
 - API for sending sms to single user or gruop of users and sending push notification to single user or group of users
 
 ## Quick Overview
 
-- This API has 4 endponts
-  1- For Send SMS to single user.
-  2- For Send SMS to group of users.
-  3- For Send push notification to single user.
-  4- For Send push notification to group of users.
+- This API has 4 endponts.
+  1. For Send SMS to single user.
+  2. For Send SMS to group of users.
+  3. For Send push notification to single user.
+  4. For Send push notification to group of users.
 
 ## Quick Start
 
