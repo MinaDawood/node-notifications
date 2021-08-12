@@ -64,14 +64,14 @@ exports.sendSmsToOneUser = async (req, res) => {
 };
 
 // Send SMS to group of users
-exports.sendSmsToGroup = async (req, res) => {
+exports.sendSmsToGroup = (req, res) => {
   const { message, phoneNumbers } = req.body;
 
   // Handle errors when empty message passes
-  if (message.length === 0) {
+  if (!message || !phoneNumbers || message.length === 0 || phoneNumbers.length === 0) {
     res.status(400).json({
       status: 'failed',
-      message: "Message can't be empty",
+      message: "Message and Phone Numbers can't be empty",
     });
     return;
   }
@@ -80,7 +80,7 @@ exports.sendSmsToGroup = async (req, res) => {
   const from = '+19389999545';
   const body = `${message} - Sent From: Swvl-Egypt`;
 
-  let mainResponse = {};
+  const mainResponse = {};
 
   // Loop throw the phone numbers and send the SMS to every number and send main response for all
   phoneNumbers.forEach((num) => {
@@ -98,82 +98,37 @@ exports.sendSmsToGroup = async (req, res) => {
         from,
         to,
       })
-      .then(async (msg) => {
+      .then(async () => {
         // If the SMS sent successfully -> Save the data into the DB and return the response
         await SMSToSaved.save()
-          .then((doc) => {})
-          .catch((databaseErr) => {});
+          .then((doc) => {
+            mainResponse[to] = {
+              status: 'success',
+              docSaved: doc,
+            };
+          })
+          .catch((databaseErr) => {
+            mainResponse[to] = {
+              status: 'failed',
+              docSaved: databaseErr,
+            };
+          });
+        if (num === phoneNumbers[phoneNumbers.length - 1]) {
+          res.json({
+            message: mainResponse,
+          });
+        }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        mainResponse[to] = {
+          status: 'failed',
+          message: err.message,
+        };
+        if (num === phoneNumbers[phoneNumbers.length - 1]) {
+          res.json({
+            message: mainResponse,
+          });
+        }
+      });
   });
 };
-
-// Send SMS to group of users
-// exports.sendSmsToGroup = async (req, res) => {
-//   const { message, phoneNumbers } = req.body;
-
-//   // Handle errors when empty data passes
-//   if (!message || !phoneNumbers || message.length === 0 || phoneNumbers.length === 0) {
-//     res.status(400).json({
-//       status: 'failed',
-//       message: 'Must provide the message and the phone number',
-//     });
-//     return;
-//   }
-
-//   // SMS data
-//   const from = 'SWVL-Egypt';
-//   const text = message;
-
-//   const finalResponse = {};
-
-//   phoneNumbers.forEach(async (num) => {
-//     console.log('1');
-//     const to = num;
-
-//     // Initalize sms model to save into the DB
-//     const theSms = new SmsModel({
-//       message: text,
-//       phoneNumber: to,
-//       sendAt: new Date(),
-//     });
-
-//     await vonage.message
-//       .sendSms(from, to, text,(err, res) => {
-
-//       })
-//       .then(() => {
-//         console.log('CCC');
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-
-//     // await vonage.message.sendSms(from, to, text, async (err, responseData) => {
-//     //   if (err) {
-//     //     finalResponse[to] = 'Failed';
-//     //   } else if (responseData.messages[0].status === '0') {
-//     // Save the SMS notification into MongoDB
-//     // await theSms
-//     //   .save()
-//     //   .then((doc) => {
-//     //     const dataSaved = doc;
-//     //   })
-//     //   .catch((databaseErr) => {
-//     //     finalResponse[to] = 'Failed';
-//     //   });
-//     // finalResponse[to] = 'Success';
-//     // } else {
-//     //   const msgError = `Message failed with error: ${responseData.messages[0]['error-text']}`;
-//     //   finalResponse[to] = msgError;
-//     //   console.log(finalResponse);
-//     // }
-//     // });
-//   });
-
-//   console.log('2', finalResponse);
-//   await res.status(200).json({
-//     status: 'sccuess',
-//     message: finalResponse,
-//   });
-// };

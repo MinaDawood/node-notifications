@@ -1,7 +1,7 @@
-POST http://localhost:5000/api/v1/sms/single HTTP/1.1
+POST http://localhost:5000/api/v1/sms/group HTTP/1.1
 content-type: application/json
 
 {
-    "message": "Hello From Node.js",
-    "phoneNumber": "+201204582130"
+    "message": "Hello World!",
+    "phoneNumbers": ["201018363251", "201204582130"]
 }
