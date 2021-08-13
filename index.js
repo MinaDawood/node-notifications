@@ -27,6 +27,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.status(200).send('Hello World!');
 });
+
 // Handle sending sms
 app.use('/api/v1/sms', require('./routes/smsRoutes'));
 

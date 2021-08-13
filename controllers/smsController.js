@@ -11,7 +11,7 @@ exports.sendSmsToOneUser = async (req, res) => {
   const { message, phoneNumber } = req.body;
 
   // Handle errors when empty message passes
-  if (message.length === 0) {
+  if (!message || !phoneNumber || message.length === 0 || phoneNumber.length === 0) {
     res.status(400).json({
       status: 'failed',
       message: "Message can't be empty",

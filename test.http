@@ -1,7 +1,8 @@
-POST http://localhost:5000/api/v1/sms/group HTTP/1.1
+POST http://localhost:5000/api/v1/push-notification/single/v2 HTTP/1.1
 content-type: application/json
 
 {
-    "message": "Hello World!",
-    "phoneNumbers": ["201018363251", "201204582130"]
+    "title": "HHHo",
+    "body": "Hello World!",
+    "deviceId": "smxsoanpn"
 }
