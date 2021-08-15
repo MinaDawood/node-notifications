@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 // Routes
 // const smsRoutes = require('./routes/smsRoutes');
+const smsRoutes = require('./routes/smsRoutes');
 const pushNotificationRoutes = require('./routes/pushNotificationRoutes');
 
 // Init the app
@@ -29,7 +30,7 @@ app.get('/', (req, res) => {
 });
 
 // Handle sending sms
-app.use('/api/v1/sms', require('./routes/smsRoutes'));
+app.use('/api/v1/sms', smsRoutes);
 
 // Handle sending push notification
 app.use('/api/v1/push-notification', pushNotificationRoutes);
