@@ -33,3 +33,9 @@ content-type: application/json
 }
 
 ```
+
+## Testing
+
+```
+npm run test
+```

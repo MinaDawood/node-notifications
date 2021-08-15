@@ -7,13 +7,13 @@ chai.should();
 
 chai.use(chaiHttp);
 
-describe('SMS API', () => {
+describe('Push notification API', () => {
   // If empty data passes
   describe('POST', () => {
     it('If empty data passes', (done) => {
       chai
         .request(app)
-        .post('/api/v1/sms/single')
+        .post('/api/v1/push-notification/single/v2')
         .end((err, response) => {
           response.should.have.status(400);
         });
@@ -21,18 +21,20 @@ describe('SMS API', () => {
     });
   });
 
-  // If full data passes but not a vaild or registered number
+  // If full data passes
   describe('POST', () => {
-    it('If Full data passes but not vaild or registered', (done) => {
+    it('If Full data passes', (done) => {
       chai
         .request(app)
-        .post('/api/v1/sms/single')
+        .post('/api/v1/push-notification/single/v2')
         .send({
-          message: 'test message', // Put message here
-          phoneNumber: '+2', // Put phone number here
+          title: 'notification title',
+          body: 'push notification body',
+          deviceId: 'ABCDESFGAH',
         })
         .end((err, response) => {
-          response.should.have.status(400);
+          response.should.have.status(200);
+          response.should.have.be.a('object');
         });
       done();
     });

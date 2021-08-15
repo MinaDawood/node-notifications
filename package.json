@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node",
     "dev": "nodemon",
-    "test": "mocha tests/**/*.js -r dotenv/config --watch"
+    "test": "mocha tests/**/*.js -r dotenv/config"
   },
   "keywords": [],
   "author": "",
