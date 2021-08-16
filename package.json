@@ -1,19 +1,24 @@
 {
   "name": "swvl-notifications",
   "version": "1.0.0",
-  "description": "",
+  "description": "Swvl Notifications API",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MinaDawood/node-notifications"
+  },
   "scripts": {
     "start": "node",
     "dev": "nodemon",
     "test": "mocha tests/**/*.js -r dotenv/config"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mina Daoud",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-rate-limit": "^5.3.0",
     "firebase-admin": "^9.11.0",
     "mongoose": "^5.13.5",
     "twilio": "^3.66.1"

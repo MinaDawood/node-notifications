@@ -25,7 +25,7 @@
 
 - **NOTE-3** I couldn't get real token so i can test FCM push notification API so i made a fake one will response with a json object.
 
-## Send SMS to single user
+## Send a SMS to single user
 
 - Hit this endpoint -> http://localhost:5000/api/v1/sms/single
 
@@ -38,7 +38,7 @@ content-type: application/json
 
 ```
 
-## Send SMS to multiple user
+## Send a SMS to multiple user
 
 - Hit this endpoint -> http://localhost:5000/api/v1/sms/group
 
@@ -51,9 +51,9 @@ content-type: application/json
 
 ```
 
-## Send push notification to single
+## Send a push notification to single user
 
-- Hit this endpoint -> http://localhost:5000/api/v1/sms/push-notification/single/v1
+- Hit this endpoint -> http://localhost:5000/api/v1/sms/push-notification/single/v2
 
 ```
 content-type: application/json
@@ -62,8 +62,6 @@ content-type: application/json
     "body": "Notification body" // Put your body here
     "deviceId": "Device id" // Put device id here
 }
-
-- Hit this endpoint -> http://localhost:5000/api/v1/sms/group
 
 ```
 
@@ -75,4 +73,4 @@ npm run test
 
 ## End
 
-- You can reach me via my Email: mina_daoud@outlook.com or my Phone number: 01204582130 if you have any questions
+- You can reach me via my Email: mina_daoud@outlook.com or my Phone number: 01204582130 if you have any questions.

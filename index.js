@@ -1,9 +1,10 @@
+/* eslint-disable no-console */
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit');
 
 // Routes
-// const smsRoutes = require('./routes/smsRoutes');
 const smsRoutes = require('./routes/smsRoutes');
 const pushNotificationRoutes = require('./routes/pushNotificationRoutes');
 
@@ -25,15 +26,19 @@ mongoose
 // Middleware
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.status(200).send('Hello World!');
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
 });
 
+app.get('/', (req, res) => {
+  res.send('Hello');
+});
 // Handle sending sms
-app.use('/api/v1/sms', smsRoutes);
+app.use('/api/v1/sms', apiLimiter, smsRoutes);
 
 // Handle sending push notification
-app.use('/api/v1/push-notification', pushNotificationRoutes);
+app.use('/api/v1/push-notification', apiLimiter, pushNotificationRoutes);
 
 const PORT = process.env.PORT || 5000;
 
