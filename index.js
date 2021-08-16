@@ -31,6 +31,7 @@ const apiLimiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs
 });
 
+// You can use this main endpoint to test it from your browser to check if server is running
 app.get('/', (req, res) => {
   res.send('Hello');
 });
